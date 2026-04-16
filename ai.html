@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopaholic Snake</title>
+    <style>
+        /* MAIN AESTHETIC - Matching "Eden's Favorites" */
+        body {
+            background-color: #1a2a3a; /* Deep Navy from your screenshots */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+        }
+
+        /* NAVIGATION BAR - Gold & Navy Style */
+        .game-nav {
+            width: 100%;
+            background-color: #0f172a; /* Darker navy for the bar */
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            border-bottom: 2px solid #f1c40f; /* Gold accent line */
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .game-nav a {
+            color: #f1c40f; /* Gold text */
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .game-nav a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px #f1c40f;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: #f1c40f;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* THE GAME BOARD */
+        #game-container {
+            position: relative;
+            border: 8px solid #243b55; /* Match your card colors */
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(241, 196, 15, 0.15);
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background-color: #0f172a;
+        }
+
+        .stats {
+            margin-top: 25px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #f1c40f;
+        }
+
+        .instructions {
+            margin-top: 10px;
+            color: #bdc3c7;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="game-nav">
+        <a href="index.html">Home</a>
+        <a href="resume.html">Resume</a>
+        <a href="fromscratch.html">Shopping</a>
+    </nav>
+
+    <h1>Shopaholic Snake</h1>
+    
+    <div id="game-container">
+        <canvas id="snakeGame" width="400" height="400"></canvas>
+    </div>
+
+    <div class="stats">🛍️ Bags: <span id="score">0</span></div>
+    
+    <p class="instructions">Use Arrow Keys to collect the shopping bags!</p>
+
+    <script>
+        const canvas = document.getElementById("snakeGame");
+        const ctx = canvas.getContext("2d");
+        const scoreElement = document.getElementById("score");
+
+        const box = 20; 
+        let score = 0;
+        let gameSpeed = 100;
+
+        let snake = [];
+        snake[0] = { x: 9 * box, y: 10 * box };
+
+        let food = {
+            x: Math.floor(Math.random() * 19 + 1) * box,
+            y: Math.floor(Math.random() * 19 + 1) * box
+        };
+
+        let d;
+
+        document.addEventListener("keydown", direction);
+
+        function direction(event) {
+            let key = event.keyCode;
+            if(key == 37 && d != "RIGHT") d = "LEFT";
+            else if(key == 38 && d != "DOWN") d = "UP";
+            else if(key == 39 && d != "LEFT") d = "RIGHT";
+            else if(key == 40 && d != "UP") d = "DOWN";
+        }
+
+        function collision(head, array) {
+            for(let i = 0; i < array.length; i++) {
+                if(head.x == array[i].x && head.y == array[i].y) return true;
+            }
+            return false;
+        }
+
+        function draw() {
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Snake pieces
+            for(let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i == 0) ? "#f1c40f" : "#d4af37";
+                ctx.beginPath();
+                // Check for modern browser support
+                if (ctx.roundRect) {
+                    ctx.roundRect(snake[i].x, snake[i].y, box - 2, box - 2, 6);
+                } else {
+                    ctx.rect(snake[i].x, snake[i].y, box - 2, box - 2);
+                }
+                ctx.fill();
+            }
+
+            // Draw Food (Bag)
+            ctx.font = "16px Arial";
+            ctx.fillText("🛍️", food.x + 2, food.y + 15);
+
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if( d == "LEFT") snakeX -= box;
+            if( d == "UP") snakeY -= box;
+            if( d == "RIGHT") snakeX += box;
+            if( d == "DOWN") snakeY += box;
+
+            if(snakeX == food.x && snakeY == food.y) {
+                score++;
+                scoreElement.innerHTML = score;
+                food = {
+                    x: Math.floor(Math.random() * 19 + 1) * box,
+                    y: Math.floor(Math.random() * 19 + 1) * box
+                };
+            } else {
+                snake.pop();
+            }
+
+            let newHead = { x: snakeX, y: snakeY };
+
+            // Wall and Self Collision check
+            if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(game);
+                alert("Game Over! Total Bags: " + score);
+                location.reload();
+            }
+
+            snake.unshift(newHead);
+        }
+
+        let game = setInterval(draw, gameSpeed);
+    </script>
+</body>
+</html>

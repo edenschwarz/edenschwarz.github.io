@@ -1,0 +1,98 @@
+.resume-section {
+  max-width: 800px;
+  margin: 100px auto;
+  padding: 0 32px;
+}
+
+/* MAIN HEADINGS (Education, Work Experience) */
+.resume-section h1 {
+  font-size: 1.4rem;   /* smaller */
+  font-weight: 600;
+  margin-top: 80px;    /* space ABOVE section */
+  margin-bottom: 50px; /* MORE space BELOW section */
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--amber);
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+/* SUBHEADINGS (School / Job Titles) */
+.resume-section h2 {
+  font-size: 1.15rem; /* smaller */
+  font-weight: 500;
+  margin-top: 40px;  /* MORE space between entries */
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+/* DATES */
+.date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* BULLETS */
+.resume-section ul {
+  margin-bottom: 30px; /* more space after each section */
+  padding-left: 20px;
+}
+
+.resume-section li {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.resume {
+  max-width: 700px;
+  margin: 60px auto;
+  font-family: 'Georgia', serif;
+  color: #333;
+}
+
+.main-list {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.main-list > li {
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+}
+
+.main-list strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.resume ul ul {
+  list-style-type: circle;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+
+.resume ul ul ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+
+.resume li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.main-list {
+  list-style-type: none; /* removes bullets from headers */
+  padding-left: 0;
+}
+
+.main-list > li {
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+}
+
+.resume ul ul {
+  list-style-type: circle;
+  padding-left: 20px;
+}
